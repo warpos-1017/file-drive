@@ -1,8 +1,14 @@
+import { PropsWithChildren } from 'react'
+import { redirect } from 'next/navigation'
+import { currentUser } from '@clerk/nextjs'
+
 import MobileNav from '@/components/shared/mobile-nav'
 import Sidebar from '@/components/shared/sidebar'
-import { PropsWithChildren } from 'react'
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = async ({ children }: PropsWithChildren) => {
+	const user = await currentUser()
+	if (!user) return redirect('/sign-in') 
+
   return (
     <main className='root'>
       <Sidebar />
