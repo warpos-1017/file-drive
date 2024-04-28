@@ -5,7 +5,12 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 import { Menu } from 'lucide-react'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { navLinks } from '@/constants'
 import { cn } from '@/lib/utils'
 
@@ -16,10 +21,9 @@ const NavMenu = () => {
       <SheetTrigger>
         <Menu />
       </SheetTrigger>
-      <SheetContent className='h-screen sm:w-64'>
-        <>
+      <SheetContent className='h-screen w-72'>
+        <SheetClose>
           <Image src='/images/logo-hz.png' alt='logo' width='152' height='24' />
-
           <ul className='mt-8'>
             {navLinks.map((link) => {
               const isActive = pathname === link.route
@@ -50,7 +54,7 @@ const NavMenu = () => {
               )
             })}
           </ul>
-        </>
+        </SheetClose>
       </SheetContent>
     </Sheet>
   )

@@ -13,6 +13,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TaskStatus {
+  PENDING
+  ASSIGNED
+  COMPLETED
+  FAILED
+}
+
+enum TaskType {
+  TASK
+  CHECKPOINT
+  ROUTE
+}
+
 model User {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   clerk_id      String   @unique
@@ -25,4 +38,49 @@ model User {
   creditBalance Float    @default(10)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+  Task          Task[]
+}
+
+model Tracker {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  Task Task[]
+}
+
+model Tag {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  Task   Task?   @relation(fields: [taskId], references: [id])
+  taskId String? @db.ObjectId
+}
+
+type Location {
+  latitude  Float
+  longitude Float
+  address   String
+  radius    Int
+}
+
+model Task {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String?    @db.ObjectId
+  user            User?      @relation(fields: [userId], references: [id])
+  trackerId       String?    @db.ObjectId
+  tracker         Tracker?   @relation(fields: [trackerId], references: [id])
+  label           String
+  description     String     @db.String
+  destination     Location
+  createdAt       DateTime   @default(now())
+  from            DateTime
+  to              DateTime
+  externalId      String?
+  status          TaskStatus @default(PENDING)
+  updatedAt       DateTime   @updatedAt
+  maxDelay        Int?       @default(0)
+  minStayDuration Int?       @default(0)
+  arrivedAt       DateTime
+  stayDuration    Int?
+  tag             Tag[]
+  type            TaskType   @default(TASK)
+  // WIP: 'Form' field design
+  // form 
 }

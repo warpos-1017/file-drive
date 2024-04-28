@@ -1,7 +1,7 @@
 import React from 'react'
 
 const OrdersPage = () => {
-  return <div>Orders</div>
+  return <div className=''>Map</div>
 }
 
 export default OrdersPage

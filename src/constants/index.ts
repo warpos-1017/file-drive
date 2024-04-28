@@ -1,4 +1,11 @@
-import { Coins, LucideIcon, User, Users } from 'lucide-react'
+import {
+  Coins,
+  DollarSign,
+  LucideIcon,
+  Settings,
+  User,
+  Users,
+} from 'lucide-react'
 
 export const navLinks: Array<{
   label: string
@@ -13,16 +20,16 @@ export const navLinks: Array<{
     icon: '/icons/home.svg',
   },
   {
-    label: 'Assets Monitoring',
-    route: '/assets',
-    iconType: 'svg',
-    icon: '/icons/bag.svg',
-  },
-  {
     label: 'Tracking Orders',
     route: '/orders',
     iconType: 'svg',
     icon: '/icons/coins.svg',
+  },
+  {
+    label: 'Assets Monitoring',
+    route: '/assets',
+    iconType: 'svg',
+    icon: '/icons/bag.svg',
   },
   {
     label: 'Team Management',
@@ -32,16 +39,16 @@ export const navLinks: Array<{
     icon: Users,
   },
   {
-    label: 'Profile',
-    route: '/profile',
+    label: 'Settings',
+    route: '/settings',
     iconType: 'icon',
     // icon: '/icons/profile.svg',
-    icon: User,
+    icon: Settings,
   },
   {
     label: 'Billing',
     route: '/billing',
     iconType: 'icon',
-    icon: Coins,
+    icon: DollarSign,
   },
 ]

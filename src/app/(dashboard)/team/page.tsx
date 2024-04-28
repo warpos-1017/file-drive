@@ -1,5 +1,5 @@
 const TeamPage = () => {
-  return <div></div>
+  return <div>Team Management</div>
 }
 
 export default TeamPage
