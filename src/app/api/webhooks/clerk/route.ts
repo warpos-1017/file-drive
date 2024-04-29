@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server'
 import { headers } from 'next/headers'
 import { Webhook } from 'svix'
-import { WebhookEvent } from '@clerk/nextjs/server'
+import { clerkClient, WebhookEvent } from '@clerk/nextjs/server'
 import { createUser, deleteUser, updateUser } from '@/actions/user.action'
-import { emailAddresses } from '@clerk/nextjs/api'
-import { use } from 'react'
-import { clerkClient } from '@clerk/nextjs'
+// import { emailAddresses } from '@clerk/nextjs/api'
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET
@@ -71,8 +69,8 @@ export async function POST(req: Request) {
       clerk_id: id,
       email: email_addresses[0].email_address,
       username: username!,
-      firstName: first_name,
-      lastName: last_name,
+      firstName: first_name!,
+      lastName: last_name!,
       photo: image_url,
     })
 
@@ -91,8 +89,8 @@ export async function POST(req: Request) {
 
     const updatedUser = await updateUser(id, {
       username: username!,
-      firstName: first_name,
-      lastName: last_name,
+      firstName: first_name!,
+      lastName: last_name!,
       photo: image_url,
     })
     return NextResponse.json({ message: 'OK', user: updatedUser })
