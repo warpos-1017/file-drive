@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     })
   }
 
-  const payload = req.json()
+  const payload = await req.json()
   const body = JSON.stringify(payload)
 
   // Create a new Svix instance with your secret.
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
   try {
     evt = wh.verify(body, {
       'svix-id': svix_id,
-      svix_timestamp: svix_timestamp,
+      'svix-timestamp': svix_timestamp,
       'svix-signature': svix_signature,
     }) as WebhookEvent
   } catch (err) {
@@ -60,6 +60,7 @@ export async function POST(req: Request) {
     })
   }
 
+	console.log ('Clerk webhook event: ', evtType)
   // Create
   if (evtType === 'user.created') {
     const { email_addresses, image_url, first_name, last_name, username } =
