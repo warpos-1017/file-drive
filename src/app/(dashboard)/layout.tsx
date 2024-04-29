@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { redirect } from 'next/navigation'
-import { currentUser } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs/server'
 
 import MobileNav from '@/components/shared/mobile-nav'
 import Sidebar from '@/components/shared/sidebar'
