@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.0.3",
+    "@clerk/themes": "^2.1.0",
     "@hookform/resolvers": "^3.3.4",
     "@prisma/client": "^5.12.1",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -17,11 +18,13 @@
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-separator": "^1.0.3",
     "@radix-ui/react-slot": "^1.0.2",
+    "@uploadthing/react": "^6.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
     "lucide-react": "^0.365.0",
     "next": "^14.2.3",
+    "next-themes": "^0.3.0",
     "qs": "^6.12.1",
     "react": "^18",
     "react-dom": "^18",
@@ -29,6 +32,7 @@
     "svix": "^1.21.0",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
+    "uploadthing": "^6.10.0",
     "zod": "^3.23.3"
   },
   "devDependencies": {

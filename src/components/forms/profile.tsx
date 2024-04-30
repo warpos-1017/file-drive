@@ -19,8 +19,8 @@ const ProfileForm = () => {
   const form = useForm()
   const onSubmit = () => {}
   return (
-    <Card className='xl:border-0 xl:shadow-none'>
-      <CardHeader className='xl:pt-0'>
+    <Card className='xl:border-0 xl:shadow-none xl:ml-2'>
+      <CardHeader className='xl:pt-2'>
         <Header
           title='Profile'
           description='Essential information regarding your business'

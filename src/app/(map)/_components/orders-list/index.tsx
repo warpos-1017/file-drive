@@ -20,7 +20,7 @@ import { Filter, Search } from 'lucide-react'
 
 const OrdersList = () => {
   return (
-    <aside className='hidden lg:block lg:h-screen w-[360px] p-4 bg-stone-50'>
+    <aside className='hidden lg:block lg:h-screen w-[360px] p-4 bg-stone-50 dark:bg-dark-700'>
       <div className='flex flex-col gap-3 mt-4'>
         <div className='flex items-center text-lg font-semibold'>
           <div className=''>Active Orders</div>

@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import NavMenu from './nav-menu'
+
 import { Button } from '@/components/ui/button'
+import { ModeToggle } from '@/components/shared/mode-toggle'
+
+import NavMenu from './nav-menu'
 
 const MobileNav = () => {
   return (
@@ -14,6 +17,7 @@ const MobileNav = () => {
         <SignedIn>
           <UserButton afterSignOutUrl='/' />
           <NavMenu />
+          <ModeToggle />
         </SignedIn>
         <SignedOut>
           <Button asChild className='button bg-purple-gradient bg-cover'>

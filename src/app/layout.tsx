@@ -2,8 +2,11 @@ import type { Metadata } from 'next'
 import { IBM_Plex_Sans } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { ClerkProvider } from '@clerk/nextjs'
+import { dark } from '@clerk/themes'
 
 import './globals.css'
+import { ThemeProvider } from '@/providers/theme-provider'
+import ModalProvider from '@/providers/modal-provider'
 
 const IBMPlex = IBM_Plex_Sans({
   subsets: ['latin'],
@@ -22,10 +25,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider>
-      <html lang='en'>
+    <ClerkProvider appearance={{ baseTheme: dark }}>
+      <html lang='en' suppressHydrationWarning>
         <body className={cn('font-IBMPlex antialiased', IBMPlex.variable)}>
-          {children}
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='system'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <ModalProvider>{children}</ModalProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

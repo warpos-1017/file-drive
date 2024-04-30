@@ -14,7 +14,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
       <MobileNav />
       <div className='map-container flex-1'>
         <OrdersList />
-        <div className='map border-slate-200 border flex-center flex-1'>
+        <div className='map border-border border flex-center flex-1'>
           {children}
         </div>
       </div>
