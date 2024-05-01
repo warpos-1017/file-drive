@@ -60,7 +60,7 @@ export async function POST(req: Request) {
     })
   }
 
-	console.log ('Clerk webhook event: ', evtType)
+  console.log('Clerk webhook event: ', evtType)
   // Create
   if (evtType === 'user.created') {
     const { email_addresses, image_url, first_name, last_name, username } =
@@ -70,8 +70,7 @@ export async function POST(req: Request) {
       clerk_id: id,
       email: email_addresses[0].email_address,
       username: username!,
-      firstName: first_name!,
-      lastName: last_name!,
+      name: `${first_name!} ${last_name!}`,
       photo: image_url,
     })
 
@@ -90,8 +89,7 @@ export async function POST(req: Request) {
 
     const updatedUser = await updateUser(id, {
       username: username!,
-      firstName: first_name!,
-      lastName: last_name!,
+      name: `${first_name!} ${last_name!}`,
       photo: image_url,
     })
     return NextResponse.json({ message: 'OK', user: updatedUser })

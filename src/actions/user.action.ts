@@ -8,14 +8,6 @@ import { handleError } from '@/lib/utils'
 export async function createUser(user: Prisma.UserUncheckedCreateInput) {
   try {
     const newUser = await db.user.create({
-      // data: {
-      //   clerk_id: user.clerk_id,
-      //   email: user.email,
-      //   photo: user.photo,
-      //   username: user.username,
-      //   firstName: user.firstName,
-      //   lastName: user.lastName,
-      // },
       data: user,
     })
     return newUser
@@ -24,7 +16,7 @@ export async function createUser(user: Prisma.UserUncheckedCreateInput) {
   }
 }
 
-export async function getUserById(clerkid: string) {
+export async function getUserByClerkId(clerkid: string) {
   try {
     const user = await db.user.findUnique({
       where: {

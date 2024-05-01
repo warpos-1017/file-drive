@@ -25,19 +25,19 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <ClerkProvider appearance={{ baseTheme: dark }}>
-      <html lang='en' suppressHydrationWarning>
-        <body className={cn('font-IBMPlex antialiased', IBMPlex.variable)}>
-          <ThemeProvider
-            attribute='class'
-            defaultTheme='system'
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ModalProvider>{children}</ModalProvider>
-          </ThemeProvider>
-        </body>
-      </html>
-    </ClerkProvider>
+    // <ClerkProvider appearance={{ baseTheme: dark }}>
+    <html lang='en' suppressHydrationWarning>
+      <body className={cn('font-IBMPlex antialiased', IBMPlex.variable)}>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='system'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <ModalProvider>{children}</ModalProvider>
+        </ThemeProvider>
+      </body>
+    </html>
+    // </ClerkProvider>
   )
 }
