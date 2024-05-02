@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -67,7 +67,7 @@ enum Icon {
 }
 
 model User {
-  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  id            String         @id @default(uuid())
   clerk_id      String         @unique
   email         String         @unique
   username      String         @unique
@@ -79,7 +79,7 @@ model User {
   updatedAt     DateTime       @updatedAt
   tasks         Task[]
   role          Role           @default(SUBACCOUNT_USER)
-  agencyId      String?        @db.ObjectId
+  agencyId      String?
   Agency        Agency?        @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   permissions   Permission[]
   notifications Notification[]
@@ -88,10 +88,10 @@ model User {
 }
 
 model Permission {
-  id           String     @id @default(auto()) @map("_id") @db.ObjectId
+  id           String     @id @default(cuid())
   email        String
   User         User       @relation(fields: [email], references: [email], onDelete: Cascade)
-  subaccountId String     @db.ObjectId
+  subaccountId String
   Subaccount   Subaccount @relation(fields: [subaccountId], references: [id], onDelete: Cascade)
   access       Boolean
 
@@ -100,11 +100,11 @@ model Permission {
 }
 
 model Agency {
-  id               String                @id @default(auto()) @map("_id") @db.ObjectId
+  id               String                @id @default(uuid())
   connectAccountId String?               @default("")
   customerId       String                @default("")
   name             String
-  agencyLogo       String                @db.String
+  agencyLogo       String                @db.Text
   companyEmail     String
   companyPhone     String
   whiteLabel       Boolean               @default(true)
@@ -113,7 +113,6 @@ model Agency {
   zipCode          String
   state            String
   country          String
-  goal             Int                   @default(5)
   users            User[]
   createdAt        DateTime              @default(now())
   updatedAt        DateTime              @updatedAt
@@ -125,13 +124,13 @@ model Agency {
 }
 
 model Subaccount {
-  id               String                    @id @default(auto()) @map("_id") @db.ObjectId
+  id               String                    @id @default(uuid())
   connectAccountId String?                   @default("")
   name             String
-  subAccountLogo   String                    @db.String
+  subAccountLogo   String                    @db.Text
   createdAt        DateTime                  @default(now())
   updatedAt        DateTime                  @updatedAt
-  companyEmail     String                    @db.String
+  companyEmail     String
   companyPhone     String
   goal             Int                       @default(5)
   address          String
@@ -139,7 +138,7 @@ model Subaccount {
   zipCode          String
   state            String
   country          String
-  agencyId         String                    @db.ObjectId
+  agencyId         String
   Agency           Agency                    @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   sidebarOptions   SubaccountSidebarOption[]
   permissions      Permission[]
@@ -150,12 +149,12 @@ model Subaccount {
 }
 
 model Contact {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(cuid())
   name         String
   email        String
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  subaccountId String   @db.ObjectId
+  subaccountId String
 
   Subaccount Subaccount @relation(fields: [subaccountId], references: [id], onDelete: Cascade)
   // Ticket     Ticket[]
@@ -164,11 +163,11 @@ model Contact {
 }
 
 model AgencySidebarOption {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(cuid())
   name      String   @default("Menu")
   link      String   @default("#")
   icon      Icon     @default(info)
-  agencyId  String   @db.ObjectId
+  agencyId  String
   Agency    Agency?  @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -177,14 +176,14 @@ model AgencySidebarOption {
 }
 
 model SubaccountSidebarOption {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
+  id           String      @id @default(cuid())
   name         String      @default("Menu")
   link         String      @default("#")
   icon         Icon        @default(info)
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
   Subaccount   Subaccount? @relation(fields: [subaccountId], references: [id], onDelete: Cascade)
-  subaccountId String?     @db.ObjectId
+  subaccountId String?
 
   @@index([subaccountId])
 }
@@ -196,9 +195,9 @@ enum InvitationStatus {
 }
 
 model Invitation {
-  id       String           @id @default(auto()) @map("_id") @db.ObjectId
+  id       String           @id @default(cuid())
   email    String           @unique
-  agencyId String           @db.ObjectId
+  agencyId String
   Agency   Agency           @relation(fields: [agencyId], references: [id], onDelete: Cascade)
   status   InvitationStatus @default(PENDING)
   role     Role             @default(SUBACCOUNT_USER)
@@ -207,11 +206,11 @@ model Invitation {
 }
 
 model Notification {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
+  id           String  @id @default(cuid())
   notification String
-  agencyId     String  @db.ObjectId
-  subAccountId String? @db.ObjectId
-  userId       String  @db.ObjectId
+  agencyId     String
+  subAccountId String?
+  userId       String
 
   User       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   Agency     Agency      @relation(fields: [agencyId], references: [id], onDelete: Cascade)
@@ -226,33 +225,29 @@ model Notification {
 }
 
 model Tracker {
-  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  id   String @id @default(cuid())
   Task Task[]
 }
 
 model Tag {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+  id String @id @default(cuid())
 
   Task   Task?   @relation(fields: [taskId], references: [id])
-  taskId String? @db.ObjectId
-}
-
-type Location {
-  latitude  Float
-  longitude Float
-  address   String
-  radius    Int
+  taskId String?
 }
 
 model Task {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
-  userId          String?    @db.ObjectId
+  id              String     @id @default(cuid())
+  userId          String?
   user            User?      @relation(fields: [userId], references: [id])
-  trackerId       String?    @db.ObjectId
+  trackerId       String?
   tracker         Tracker?   @relation(fields: [trackerId], references: [id])
   label           String
-  description     String     @db.String
-  destination     Location
+  description     String     @db.Text
+  latitude        Float
+  longitude       Float
+  address         String
+  radius          Int
   createdAt       DateTime   @default(now())
   from            DateTime
   to              DateTime

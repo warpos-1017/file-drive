@@ -1,6 +1,6 @@
+import { PropsWithChildren } from 'react'
 import { ClerkProvider } from '@clerk/nextjs'
 import { dark } from '@clerk/themes'
-import { PropsWithChildren } from 'react'
 
 const Layout = ({ children }: PropsWithChildren) => {
   return (

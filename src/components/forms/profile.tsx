@@ -1,7 +1,7 @@
 'use client'
 
-import React from 'react'
 import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import Header from '@/components/shared/header'
