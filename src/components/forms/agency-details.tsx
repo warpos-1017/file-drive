@@ -1,6 +1,8 @@
 'use client'
 
 import { v4 as uuidv4 } from 'uuid'
+
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -32,13 +34,15 @@ import { Button } from '@/components/ui/button'
 import Loading from '@/components/shared/loading'
 import { upsertAgency } from '@/actions/upsert-agency'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
+import FileUpload from '../shared/file-upload'
 
 type Props = {
   data?: Partial<Agency>
 }
 
 const AgencyDetails = ({ data }: Props) => {
+  const { user } = useUser()
   const { toast } = useToast()
   const route = useRouter()
   const [error, setError] = useState('')
@@ -50,7 +54,8 @@ const AgencyDetails = ({ data }: Props) => {
     resolver: zodResolver(agencyDetailSchema),
     defaultValues: {
       name: data?.name,
-      companyEmail: data?.companyEmail,
+      // WIP: set default email address of current user necessary ??
+      companyEmail: user?.emailAddresses[0].emailAddress || data?.companyEmail,
       companyPhone: data?.companyPhone,
       whiteLabel: data?.whiteLabel || false,
       address: data?.address,
@@ -84,19 +89,19 @@ const AgencyDetails = ({ data }: Props) => {
       companyEmail: values.companyEmail,
       connectAccountId: '',
     })
-      .then((data) => {
-        if (data?.success) {
+      .then((res) => {
+        if (res?.success) {
           toast({
             title: 'Success!',
-            description: data.success,
+            description: data?.id ? 'Agency udpated' : 'Agency created',
           })
           route.refresh()
           // setSuccess(data?.success)
         }
-        if (data?.error) {
+        if (res?.error) {
           toast({
             title: 'Oppse!',
-            description: data.error,
+            description: res.error,
             variant: 'destructive',
           })
           // setError(data?.error)
@@ -104,7 +109,7 @@ const AgencyDetails = ({ data }: Props) => {
       })
       .catch((error) => {
         console.log(error)
-        setError('Something went wrong')
+        setError('The error here should not be catched')
       })
   }
 
@@ -135,7 +140,12 @@ const AgencyDetails = ({ data }: Props) => {
                   <FormItem className=''>
                     <FormLabel>Agency Logo</FormLabel>
                     <FormControl>
-                      <Input placeholder='Your agency Logo' {...field} />
+                      <FileUpload
+                        apiEndpoint='agencyLogo'
+                        onChange={field.onChange}
+                        value={field.value}
+                      />
+                      {/* <Input placeholder='Your agency Logo' {...field} /> */}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
