@@ -1,6 +1,8 @@
 'use client'
 
 import { v4 as uuidv4 } from 'uuid'
+
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -32,13 +34,15 @@ import { Button } from '@/components/ui/button'
 import Loading from '@/components/shared/loading'
 import { upsertAgency } from '@/actions/upsert-agency'
 import { useToast } from '@/components/ui/use-toast'
-import { useRouter } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
+import FileUpload from '../shared/file-upload'
 
 type Props = {
   data?: Partial<Agency>
 }
 
 const AgencyDetails = ({ data }: Props) => {
+  const { user } = useUser()
   const { toast } = useToast()
   const route = useRouter()
   const [error, setError] = useState('')
@@ -50,7 +54,8 @@ const AgencyDetails = ({ data }: Props) => {
     resolver: zodResolver(agencyDetailSchema),
     defaultValues: {
       name: data?.name,
-      companyEmail: data?.companyEmail,
+      // WIP: set default email address of current user necessary ??
+      companyEmail: user?.emailAddresses[0].emailAddress || data?.companyEmail,
       companyPhone: data?.companyPhone,
       whiteLabel: data?.whiteLabel || false,
       address: data?.address,
@@ -67,52 +72,52 @@ const AgencyDetails = ({ data }: Props) => {
     // WIP: handle stripe customer creation
 
     let custId = ''
-    upsertAgency({
-      id: data?.id || uuidv4(),
-      customerId: data?.customerId || custId || '',
-      address: values.address,
-      agencyLogo: values.agencyLogo,
-      city: values.city,
-      companyPhone: values.companyPhone,
-      country: values.country,
-      name: values.name,
-      state: values.state,
-      whiteLabel: values.whiteLabel,
-      zipCode: values.zipCode,
-      // createdAt: new Date(),
-      // updatedAt: new Date(),
-      companyEmail: values.companyEmail,
-      connectAccountId: '',
-    })
-      .then((data) => {
-        if (data?.success) {
-          toast({
-            title: 'Success!',
-            description: data.success,
-          })
-          route.refresh()
-          // setSuccess(data?.success)
-        }
-        if (data?.error) {
-          toast({
-            title: 'Oppse!',
-            description: data.error,
-            variant: 'destructive',
-          })
-          // setError(data?.error)
-        }
+    try {
+      const response = await upsertAgency({
+        id: data?.id || uuidv4(),
+        customerId: data?.customerId || custId || '',
+        address: values.address,
+        agencyLogo: values.agencyLogo,
+        city: values.city,
+        companyPhone: values.companyPhone,
+        country: values.country,
+        name: values.name,
+        state: values.state,
+        whiteLabel: values.whiteLabel,
+        zipCode: values.zipCode,
+        companyEmail: values.companyEmail,
+        connectAccountId: '',
       })
-      .catch((error) => {
-        console.log(error)
-        setError('Something went wrong')
+      if (response?.success) {
+        toast({
+          title: 'Success!',
+          description: data?.id ? 'Agency udpated' : 'Agency created',
+        })
+        route.refresh()
+        // setSuccess(data?.success)
+      }
+      if (response?.error) {
+        toast({
+          title: 'Oppse!',
+          description: response.error,
+          variant: 'destructive',
+        })
+        // setError(data?.error)
+      }
+    } catch (error: unknown) {
+      toast({
+        title: 'Oppse!',
+        description: `SERVER ERROR - ${(error as Error).message}`,
+        variant: 'destructive',
       })
+    }
   }
 
   useEffect(() => {
     if (data) {
       form.reset(data)
     }
-  }, [data])
+  }, [data, form])
 
   return (
     <AlertDialog>
@@ -135,44 +140,51 @@ const AgencyDetails = ({ data }: Props) => {
                   <FormItem className=''>
                     <FormLabel>Agency Logo</FormLabel>
                     <FormControl>
-                      <Input placeholder='Your agency Logo' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                disabled={isLoading}
-                control={form.control}
-                name='name'
-                render={({ field }) => (
-                  <FormItem className=''>
-                    <FormLabel>Agency Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder='Your agency name' {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                disabled={isLoading}
-                control={form.control}
-                name='companyEmail'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Company Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        type='email'
-                        placeholder='john.doe@example.com'
-                        {...field}
+                      <FileUpload
+                        apiEndpoint='agencyLogo'
+                        onChange={field.onChange}
+                        value={field.value}
                       />
+                      {/* <Input placeholder='Your agency Logo' {...field} /> */}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              <div className='flex items-center gap-2 md:gap-4'>
+                <FormField
+                  disabled={isLoading}
+                  control={form.control}
+                  name='name'
+                  render={({ field }) => (
+                    <FormItem className='flex-1'>
+                      <FormLabel>Agency Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Your agency name' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  disabled={isLoading}
+                  control={form.control}
+                  name='companyEmail'
+                  render={({ field }) => (
+                    <FormItem className='flex-1'>
+                      <FormLabel>Company Email</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='email'
+                          placeholder='john.doe@example.com'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 disabled={isLoading}
                 control={form.control}
@@ -285,7 +297,11 @@ const AgencyDetails = ({ data }: Props) => {
                   </FormItem>
                 )}
               />
-              <Button type='submit' disabled={isLoading}>
+              <Button
+                type='submit'
+                disabled={isLoading}
+                className='cursor-pointer'
+              >
                 {isLoading ? <Loading /> : 'Save Agency Information'}
               </Button>
             </form>

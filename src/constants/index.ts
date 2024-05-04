@@ -52,3 +52,36 @@ export const navLinks: Array<{
     icon: DollarSign,
   },
 ]
+
+export const agencySidebarOptions = [
+  {
+    name: 'Dashboard',
+    icon: 'category',
+    link: ``,
+  },
+  {
+    name: 'Launchpad',
+    icon: 'clipboardIcon',
+    link: `/launchpad`,
+  },
+  {
+    name: 'Billing',
+    icon: 'payment',
+    link: `/billing`,
+  },
+  {
+    name: 'Settings',
+    icon: 'settings',
+    link: `/settings`,
+  },
+  {
+    name: 'Sub Accounts',
+    icon: 'person',
+    link: `/all-subaccounts`,
+  },
+  {
+    name: 'Team',
+    icon: 'shield',
+    link: `/team`,
+  },
+]

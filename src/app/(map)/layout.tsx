@@ -14,7 +14,7 @@ const Layout = async ({ children }: PropsWithChildren) => {
   return (
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <main className='root'>
-        <Sidebar />
+        {/* <Sidebar /> */}
         <MobileNav />
         <div className='map-container flex-1'>
           <OrdersList />

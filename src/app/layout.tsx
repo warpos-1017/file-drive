@@ -1,8 +1,6 @@
 import type { Metadata } from 'next'
 import { IBM_Plex_Sans } from 'next/font/google'
 import { cn } from '@/lib/utils'
-import { ClerkProvider } from '@clerk/nextjs'
-import { dark } from '@clerk/themes'
 
 import './globals.css'
 import { ThemeProvider } from '@/providers/theme-provider'

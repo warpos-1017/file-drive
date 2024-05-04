@@ -25,7 +25,7 @@ type ModalContextType = {
 }
 
 // create context with initial values
-const ModalContext = createContext<ModalContextType>({
+export const ModalContext = createContext<ModalContextType>({
   data: {},
   isOpen: false,
   setOpen: () => {},
