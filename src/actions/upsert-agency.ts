@@ -6,7 +6,6 @@ import { Prisma } from '@prisma/client'
 import { upsertUser } from '@/actions/shared'
 import db from '@/lib/db'
 import { agencySidebarOptions } from '@/constants'
-import { link } from 'fs'
 
 export const upsertAgency = async (
   agency: Prisma.AgencyUncheckedCreateInput

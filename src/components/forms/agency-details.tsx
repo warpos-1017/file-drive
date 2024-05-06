@@ -145,7 +145,6 @@ const AgencyDetails = ({ data }: Props) => {
                         onChange={field.onChange}
                         value={field.value}
                       />
-                      {/* <Input placeholder='Your agency Logo' {...field} /> */}
                     </FormControl>
                     <FormMessage />
                   </FormItem>
